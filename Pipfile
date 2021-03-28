@@ -9,6 +9,7 @@ djangorestframework = "*"
 autopep8 = "*"
 pylint = "*"
 pylint-django = "*"
+requests = "*"
 
 [dev-packages]
 
