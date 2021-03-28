@@ -13,4 +13,4 @@ def get_data(id=None):
     print(j_response)
 
 
-get_data(4)
+get_data()
