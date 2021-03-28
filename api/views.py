@@ -37,19 +37,37 @@ def get_view_old(request):
         return HttpResponse(json_data, content_type="application/json")
 
 
+def get_url_view(request, id):
+    """
+    REST API Response, for sending data back in the json format.
+    """
+    if request.method == "GET":
+        if id is not None:
+            complex_obj = get_object_or_404(Student, id=id)
+            serializer = StudentSerializer(complex_obj)
+            return JsonResponse(data=serializer.data, safe=False)
+
+
 def get_view(request):
     """
     REST API Response, for sending data back in the json format.
     """
     if request.method == "GET":
-        json_data = request.body
-        stream = io.BytesIO(json_data)
-        py_data = JSONParser().parse(stream)
+        py_data = json.loads(request.body)
         id = py_data.get('id', None)
         if id is not None:
-            complex_obj = Student.objects.get(id=id)
+            complex_obj = get_object_or_404(Student, id=id)
             serializer = StudentSerializer(complex_obj)
             return JsonResponse(data=serializer.data, safe=False)
-        stu = Student.objects.all().order_by('-id')
+        stu = get_list_or_404(Student)
         serializer = StudentSerializer(stu, many=True)
         return JsonResponse(data=serializer.data, safe=False)
+
+
+def get_all(request):
+    """
+    REST API Response send all data from db.
+    """
+    get_objs = get_list_or_404(Student)
+    serializer = StudentSerializer(get_objs, many=True)
+    return JsonResponse(data=serializer.data, safe=False)
