@@ -6,7 +6,6 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
 from .serializers import StudentSerializer
 import json
-from django.forms.models import model_to_dict
 
 
 def get_view_old(request):
