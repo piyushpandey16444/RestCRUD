@@ -1,7 +1,6 @@
 import requests
-import io
 import json
-URL = ''
+URL = 'http://localhost:8000/data/'
 
 
 def get_data(id=None):
@@ -10,8 +9,8 @@ def get_data(id=None):
         py_dict = {'id': id}
     json_data = json.dumps(py_dict)
     json_response = requests.get(url=URL, data=json_data)
-    py_response = json_response.json()
-    print(py_response)
+    j_response = json_response.json()
+    print(j_response)
 
 
-get_data()
+get_data(4)
