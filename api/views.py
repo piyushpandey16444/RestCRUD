@@ -6,6 +6,7 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
 from .serializers import StudentSerializer
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework import status
 import json
 
 
@@ -82,3 +83,19 @@ def get_url_view(request, id):
             complex_obj = get_object_or_404(Student, id=id)
             serializer = StudentSerializer(complex_obj)
             return JsonResponse(data=serializer.data, safe=False)
+
+
+@csrf_exempt
+def create_view(request):
+    """
+    REST API for creating data in db & storing data sent from Request.
+    """
+    if request.method == "POST":
+        json_dt = request.body
+        to_py = json.loads(json_dt)
+        serializer = StudentSerializer(data=to_py)
+        if serializer.is_valid():
+            serializer.save()
+            pr_resp = {'msg': "Data Created !"}
+            return JsonResponse(data=pr_resp, status=status.HTTP_201_CREATED)
+        return JsonResponse(data=serializer.errors, status=status.HTTP_403_FORBIDDEN)
