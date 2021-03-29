@@ -76,7 +76,7 @@ def get_view(request):
             serializer.save()
             resp = {"msg": 'Data Updated !'}
             return JsonResponse(data=resp, safe=True, status=status.HTTP_201_CREATED)
-        return JsonResponse(data=serializer.errors, status=status.HTTP_304_NOT_MODIFIED)
+        return JsonResponse(data=serializer.errors, status=status.HTTP_200_OK)
 
 
 def get_all(request):
@@ -133,4 +133,4 @@ def update_view(request):
             serializer.save()
             resp = {'msg': 'Update Successful !'}
             return JsonResponse(data=resp, status=status.HTTP_201_CREATED, safe=True)
-        return JsonResponse(data=serializer.errors, status=status.HTTP_304_NOT_MODIFIED, safe=False)
+        return JsonResponse(data=serializer.errors, safe=False, status=status.HTTP_200_OK)
