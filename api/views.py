@@ -113,3 +113,24 @@ def create_view(request):
             pr_resp = {'msg': "Data Created !"}
             return JsonResponse(data=pr_resp, status=status.HTTP_201_CREATED)
         return JsonResponse(data=serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@csrf_exempt
+def update_view(request):
+    """
+    API for updating data based on id from the front end.
+    return: update successful msg or errors as per the case.
+    """
+    if request.method == "PUT":
+        obj = {}
+        get_json = request.body
+        to_py = json.loads(get_json)
+        get_id = to_py.get('id', None)
+        if get_id is not None:
+            obj = get_object_or_404(Student, id=get_id)
+        serializer = StudentSerializer(instance=obj, data=to_py, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            resp = {'msg': 'Update Successful !'}
+            return JsonResponse(data=resp, status=status.HTTP_201_CREATED, safe=True)
+        return JsonResponse(data=serializer.errors, status=status.HTTP_304_NOT_MODIFIED, safe=False)
