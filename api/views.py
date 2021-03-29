@@ -18,10 +18,10 @@ def get_view_old(request):
         # parse to py
         py_data = JSONParser().parse(stream)
         # get required item from py dict
-        id = py_data.get('id', None)
-        if id is not None:
+        get_id = py_data.get('id', None)
+        if get_id is not None:
             # get complex querySet
-            complex_obj = Student.objects.get(id=id)
+            complex_obj = get_object_or_404(Student, id=get_id)
             # serializer complex -> native py
             serializer = StudentSerializer(complex_obj)
             # render py -> json
@@ -29,7 +29,7 @@ def get_view_old(request):
             # return json
             return HttpResponse(json_data, content_type="application/json")
         # get complex querySets
-        stu = Student.objects.all().order_by('-id')
+        stu = get_list_or_404(Student).order_by('-id')
         # serializer complex -> native py
         serializer = StudentSerializer(stu, many=True)
         # render py -> json
