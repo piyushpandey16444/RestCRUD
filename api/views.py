@@ -5,6 +5,7 @@ from django.shortcuts import render, get_object_or_404, get_list_or_404
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
 from .serializers import StudentSerializer
+from django.views.decorators.csrf import csrf_exempt
 import json
 
 
@@ -36,6 +37,7 @@ def get_view_old(request):
         return HttpResponse(json_data, content_type="application/json")
 
 
+@csrf_exempt
 def get_view(request):
     """
     REST API Response, for sending data back in the json format.
@@ -50,6 +52,16 @@ def get_view(request):
         stu = get_list_or_404(Student)
         serializer = StudentSerializer(stu, many=True)
         return JsonResponse(data=serializer.data, safe=False)
+
+    elif request.method == "POST":
+        get_json = request.body
+        py_dt = json.loads(get_json)
+        serializer = StudentSerializer(data=py_dt)
+        if serializer.is_valid():
+            serializer.save()
+            py_resp = {'msg': 'Data Created !'}
+            return JsonResponse(data=py_resp, safe=False)
+        return JsonResponse(data=serializer.errors, safe=False)
 
 
 def get_all(request):
