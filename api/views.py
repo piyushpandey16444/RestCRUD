@@ -93,9 +93,11 @@ def create_view(request):
     if request.method == "POST":
         json_dt = request.body
         to_py = json.loads(json_dt)
+        print("to_py", to_py)
         serializer = StudentSerializer(data=to_py)
         if serializer.is_valid():
+            print('saved')
             serializer.save()
             pr_resp = {'msg': "Data Created !"}
             return JsonResponse(data=pr_resp, status=status.HTTP_201_CREATED)
-        return JsonResponse(data=serializer.errors, status=status.HTTP_403_FORBIDDEN)
+        return JsonResponse(data=serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
