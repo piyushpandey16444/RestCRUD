@@ -64,6 +64,20 @@ def get_view(request):
             return JsonResponse(data=py_resp, status=status.HTTP_201_CREATED)
         return JsonResponse(data=serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+    elif request.method == "PUT":
+        json_dt = request.body
+        to_py = json.loads(json_dt)
+        get_id = to_py.get('id', None)
+        obj = {}
+        if get_id is not None:
+            obj = get_object_or_404(Student, id=get_id)
+        serializer = StudentSerializer(obj, data=to_py, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            resp = {"msg": 'Data Updated !'}
+            return JsonResponse(data=resp, safe=True, status=status.HTTP_201_CREATED)
+        return JsonResponse(data=serializer.errors, status=status.HTTP_304_NOT_MODIFIED)
+
 
 def get_all(request):
     """

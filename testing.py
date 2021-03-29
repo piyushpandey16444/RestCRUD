@@ -23,4 +23,15 @@ def send_data():
     print(j_response)
 
 
-send_data()
+# send_data()
+
+
+def update_data():
+    py_dict = {"id": 6, "name": "Ravi Updated", "roll_no": 7, "city": "MBU"}
+    json_dt = json.dumps(py_dict)
+    json_response = requests.put(url=URL, data=json_dt)
+    j_response = json_response.json()
+    print(j_response)
+
+
+update_data()
