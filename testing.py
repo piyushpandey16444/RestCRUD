@@ -34,4 +34,15 @@ def update_data():
     print(j_response)
 
 
-update_data()
+# update_data()
+
+
+def delete_data():
+    py_dict = {"id": 6}
+    json_dt = json.dumps(py_dict)
+    json_response = requests.delete(url=URL, data=json_dt)
+    j_response = json_response.json()
+    print(j_response)
+
+
+delete_data()

@@ -29,7 +29,7 @@ def get_view_old(request):
             # return json
             return HttpResponse(json_data, content_type="application/json")
         # get complex querySets
-        stu = get_list_or_404(Student).order_by('-id')
+        stu = get_list_or_404(Student)
         # serializer complex -> native py
         serializer = StudentSerializer(stu, many=True)
         # render py -> json
@@ -77,6 +77,19 @@ def get_view(request):
             resp = {"msg": 'Data Updated !'}
             return JsonResponse(data=resp, safe=True, status=status.HTTP_201_CREATED)
         return JsonResponse(data=serializer.errors, status=status.HTTP_200_OK)
+
+    elif request.method == "DELETE":
+        json_dt = request.body
+        to_py = json.loads(json_dt)
+        try:
+            get_id = to_py.get('id', None)
+            obj = get_object_or_404(Student, id=get_id)
+            print("obj: ", obj)
+            if obj:
+                obj.delete()
+                return JsonResponse(data={"msg": 'data deleted !'}, safe=True, status=status.HTTP_200_OK)
+        except Exception:
+            return JsonResponse(data={'msg': 'No Student matches the given query'}, status=status.HTTP_404_NOT_FOUND)
 
 
 def get_all(request):
@@ -134,3 +147,17 @@ def update_view(request):
             resp = {'msg': 'Update Successful !'}
             return JsonResponse(data=resp, status=status.HTTP_201_CREATED, safe=True)
         return JsonResponse(data=serializer.errors, safe=False, status=status.HTTP_200_OK)
+
+
+@csrf_exempt
+def delete_view(request):
+    if request.method == "DELETE":
+        json_dt = request.body
+        to_py = json.loads(json_dt)
+        get_id = to_py.get('id')
+        try:
+            obj = get_object_or_404(Student, id=get_id)
+            obj.delete()
+            return JsonResponse(data={"msg": 'data deleted !'}, safe=True, status=status.HTTP_200_OK)
+        except Exception:
+            return JsonResponse(data={'msg': 'No Student matches the given query'}, status=status.HTTP_404_NOT_FOUND)
